@@ -7,6 +7,9 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import mediaRoute from "./routes/media.route.js";
 import courseProgressRoute from "./routes/courseProgress.route.js";
+import path from "path";
+
+const __dirname = path.resolve();
 
 dotenv.config({});
 
@@ -28,6 +31,10 @@ app.use("/api/v1/user", userRoute);
 app.use("/api/v1/course", courseRoute);
 app.use("/api/v1/progress", courseProgressRoute);
 
+app.use(express.static(path.join(__dirname, "/frontend/dist")));
+app.get("*", (req, res)=>{
+    res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
+})
 
 
 app.listen(PORT, (err) => {
