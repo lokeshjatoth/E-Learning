@@ -20,10 +20,15 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({
-    origin: process.env.ORIGIN_URL,
-    credentials: true
-}));
+
+
+if(process.env.NODE_ENV === "production"){
+    app.use(cors({
+        origin: process.env.ORIGIN_URL,
+        credentials: true
+    }));
+}
+
 
 //apis
 app.use("/api/v1/media", mediaRoute);
@@ -31,10 +36,9 @@ app.use("/api/v1/user", userRoute);
 app.use("/api/v1/course", courseRoute);
 app.use("/api/v1/progress", courseProgressRoute);
 
-app.use(express.static(path.join(__dirname, "/frontend/dist")));
-app.get("*", (req, res)=>{
-    res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
-})
+if(process.env.NODE_ENV === "production"){
+    app.use(express.static(path.join(__dirname, "frontend/dist")));
+}
 
 
 app.listen(PORT, (err) => {
